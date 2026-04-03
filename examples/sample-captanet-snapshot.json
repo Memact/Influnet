@@ -1,0 +1,125 @@
+{
+  "system": "captanet",
+  "snapshot_type": "captanet-memory-export",
+  "schema_version": 1,
+  "generated_at": "2026-04-03T12:00:00.000Z",
+  "counts": {
+    "events": 0,
+    "sessions": 0,
+    "activities": 10
+  },
+  "events": [],
+  "sessions": [],
+  "activities": [
+    {
+      "id": 1,
+      "key": "reading-about-startup",
+      "label": "Reading about startup",
+      "subject": "startup",
+      "summary": "Reading startup material.",
+      "started_at": "2026-04-03T09:00:00.000Z",
+      "ended_at": "2026-04-03T09:08:00.000Z",
+      "event_count": 3,
+      "mode": "reading"
+    },
+    {
+      "id": 2,
+      "key": "exam-revision-notes",
+      "label": "Exam revision notes",
+      "subject": "exam revision",
+      "summary": "Reviewing exam content.",
+      "started_at": "2026-04-03T09:12:00.000Z",
+      "ended_at": "2026-04-03T09:20:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 3,
+      "key": "startup-podcast",
+      "label": "Startup podcast",
+      "subject": "startup founder",
+      "summary": "Listening to a startup discussion.",
+      "started_at": "2026-04-03T09:31:00.000Z",
+      "ended_at": "2026-04-03T09:38:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 4,
+      "key": "exam-strategy-video",
+      "label": "Exam strategy video",
+      "subject": "exam strategy",
+      "summary": "Watching exam preparation guidance.",
+      "started_at": "2026-04-03T09:41:00.000Z",
+      "ended_at": "2026-04-03T09:49:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 5,
+      "key": "founder-interview",
+      "label": "Founder interview",
+      "subject": "startup founder",
+      "summary": "Watching a founder interview.",
+      "started_at": "2026-04-03T10:00:00.000Z",
+      "ended_at": "2026-04-03T10:06:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 6,
+      "key": "exam-question-bank",
+      "label": "Exam question bank",
+      "subject": "exam practice",
+      "summary": "Solving exam questions.",
+      "started_at": "2026-04-03T10:10:00.000Z",
+      "ended_at": "2026-04-03T10:16:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 7,
+      "key": "startup-founder-video",
+      "label": "Startup founder video",
+      "subject": "startup founder",
+      "summary": "Watching a startup founder video.",
+      "started_at": "2026-04-03T10:28:00.000Z",
+      "ended_at": "2026-04-03T10:35:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 8,
+      "key": "exam-prep-sprint",
+      "label": "Exam prep sprint",
+      "subject": "exam prep",
+      "summary": "Focused exam preparation.",
+      "started_at": "2026-04-03T10:39:00.000Z",
+      "ended_at": "2026-04-03T10:47:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 9,
+      "key": "startup-school-talk",
+      "label": "Startup School talk",
+      "subject": "startup school",
+      "summary": "Watching a startup school talk.",
+      "started_at": "2026-04-03T11:00:00.000Z",
+      "ended_at": "2026-04-03T11:08:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    },
+    {
+      "id": 10,
+      "key": "exam-mock-test",
+      "label": "Exam mock test",
+      "subject": "mock exam",
+      "summary": "Completing a mock exam.",
+      "started_at": "2026-04-03T11:12:00.000Z",
+      "ended_at": "2026-04-03T11:20:00.000Z",
+      "event_count": 2,
+      "mode": "reading"
+    }
+  ]
+}

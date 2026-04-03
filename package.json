@@ -1,0 +1,35 @@
+{
+  "name": "influnet",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Influnet deterministic influence engine for Captanet snapshots.",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "main": "./src/engine.mjs",
+  "exports": {
+    ".": "./src/engine.mjs",
+    "./cli": "./src/cli.mjs"
+  },
+  "keywords": [
+    "influence",
+    "transitions",
+    "deterministic",
+    "captanet",
+    "memory",
+    "analysis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Memact/Influnet.git"
+  },
+  "homepage": "https://github.com/Memact/Influnet",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "influnet": "./src/cli.mjs"
+  },
+  "scripts": {
+    "analyze": "node ./src/cli.mjs"
+  }
+}
