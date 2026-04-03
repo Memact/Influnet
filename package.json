@@ -1,7 +1,7 @@
 {
   "name": "influnet",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Influnet deterministic influence engine for Captanet snapshots.",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
@@ -30,6 +30,8 @@
     "influnet": "./src/cli.mjs"
   },
   "scripts": {
-    "analyze": "node ./src/cli.mjs"
+    "check": "node ./scripts/check.mjs",
+    "analyze": "node ./src/cli.mjs",
+    "sample": "node ./src/cli.mjs --input examples/sample-captanet-snapshot.json --format all"
   }
 }

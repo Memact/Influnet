@@ -2,6 +2,8 @@
 
 Influnet is a deterministic influence engine built on top of Captanet snapshots.
 
+Version: `v0.0`
+
 It answers:
 
 `What led to what?`
@@ -47,7 +49,7 @@ See the Captanet API contract in the Captanet repository for the public boundary
 
 ## High-Signal Rules
 
-Influnet v1 currently keeps a chain only when it survives all of these checks:
+Influnet keeps a chain only when it survives all of these checks:
 
 - `count(A -> B) >= 3`
 - `count(A) >= 5`
@@ -77,30 +79,53 @@ Examples:
 
 The default rules live in `src/engine.mjs` and can be extended without changing Captanet.
 
-## Usage
+## Terminal Quickstart
 
-Analyze a Captanet snapshot:
+Prerequisites:
+
+- Node.js `20+`
+- npm `10+`
+
+Install:
 
 ```powershell
-node src/cli.mjs --input <path-to-captanet-snapshot.json> --format all
+npm install
 ```
 
-Run the included sample:
+Run the repository validation pass:
 
 ```powershell
-node src/cli.mjs --input examples/sample-captanet-snapshot.json --format all
+npm run check
+```
+
+Run the included sample snapshot:
+
+```powershell
+npm run sample
+```
+
+Analyze any Captanet snapshot:
+
+```powershell
+npm run analyze -- --input <path-to-captanet-snapshot.json> --format all
 ```
 
 Use mode-level analysis instead of activity keys:
 
 ```powershell
-node src/cli.mjs --input <path-to-captanet-snapshot.json> --field mode --format insights
+npm run analyze -- --input <path-to-captanet-snapshot.json> --field mode --format insights
 ```
 
 Control support thresholds:
 
 ```powershell
-node src/cli.mjs --input <path-to-captanet-snapshot.json> --min-count 3 --min-source-count 5 --top 3
+npm run analyze -- --input <path-to-captanet-snapshot.json> --min-count 3 --min-source-count 5 --top 3
+```
+
+Direct CLI invocation also works:
+
+```powershell
+node src/cli.mjs --input examples/sample-captanet-snapshot.json --format all
 ```
 
 ## Programmatic Use
