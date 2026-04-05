@@ -2,124 +2,439 @@
   "system": "captanet",
   "snapshot_type": "captanet-memory-export",
   "schema_version": 1,
-  "generated_at": "2026-04-03T12:00:00.000Z",
+  "generated_at": "2026-04-05T12:00:00.000Z",
   "counts": {
-    "events": 0,
-    "sessions": 0,
-    "activities": 10
+    "events": 17,
+    "sessions": 17,
+    "activities": 17
   },
   "events": [],
   "sessions": [],
   "activities": [
     {
       "id": 1,
-      "key": "reading-about-startup",
-      "label": "Reading about startup",
-      "subject": "startup",
-      "summary": "Reading startup material.",
-      "started_at": "2026-04-03T09:00:00.000Z",
-      "ended_at": "2026-04-03T09:08:00.000Z",
-      "event_count": 3,
-      "mode": "reading"
-    },
-    {
-      "id": 2,
       "key": "exam-revision-notes",
       "label": "Exam revision notes",
       "subject": "exam revision",
-      "summary": "Reviewing exam content.",
-      "started_at": "2026-04-03T09:12:00.000Z",
-      "ended_at": "2026-04-03T09:20:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
+      "summary": "Reviewing exam material before coding.",
+      "started_at": "2026-04-01T08:00:00.000Z",
+      "ended_at": "2026-04-01T08:18:00.000Z",
+      "duration_ms": 1080000,
+      "event_count": 1,
+      "domains": ["examportal.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1001,
+          "occurred_at": "2026-04-01T08:04:00.000Z",
+          "url": "https://examportal.com/revision/thermodynamics",
+          "domain": "examportal.com",
+          "application": "chrome",
+          "title": "Thermodynamics Revision Notes",
+          "structured_summary": "Exam revision notes for thermodynamics."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "key": "coding-implementation",
+      "label": "Coding implementation",
+      "subject": "coding",
+      "summary": "Implementing a study helper script.",
+      "started_at": "2026-04-01T08:24:00.000Z",
+      "ended_at": "2026-04-01T08:48:00.000Z",
+      "duration_ms": 1440000,
+      "event_count": 1,
+      "domains": ["github.com"],
+      "applications": ["cursor"],
+      "mode": "coding",
+      "events": [
+        {
+          "id": 1002,
+          "occurred_at": "2026-04-01T08:30:00.000Z",
+          "url": "https://github.com/memact/study-helper",
+          "domain": "github.com",
+          "application": "cursor",
+          "title": "Study Helper Repository",
+          "structured_summary": "Coding inside the study helper repository."
+        }
+      ]
     },
     {
       "id": 3,
-      "key": "startup-podcast",
-      "label": "Startup podcast",
-      "subject": "startup founder",
-      "summary": "Listening to a startup discussion.",
-      "started_at": "2026-04-03T09:31:00.000Z",
-      "ended_at": "2026-04-03T09:38:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
+      "key": "startup-school-talk",
+      "label": "Startup School talk",
+      "subject": "startup school",
+      "summary": "Watching a YC startup school session.",
+      "started_at": "2026-04-02T09:00:00.000Z",
+      "ended_at": "2026-04-02T09:20:00.000Z",
+      "duration_ms": 1200000,
+      "event_count": 1,
+      "domains": ["youtube.com", "ycombinator.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1003,
+          "occurred_at": "2026-04-02T09:08:00.000Z",
+          "url": "https://www.youtube.com/watch?v=startup-school-ideas",
+          "domain": "youtube.com",
+          "application": "chrome",
+          "title": "Startup School 2026: Finding Ideas",
+          "structured_summary": "Watching a startup school talk about finding ideas."
+        }
+      ]
     },
     {
       "id": 4,
       "key": "exam-strategy-video",
       "label": "Exam strategy video",
       "subject": "exam strategy",
-      "summary": "Watching exam preparation guidance.",
-      "started_at": "2026-04-03T09:41:00.000Z",
-      "ended_at": "2026-04-03T09:49:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
+      "summary": "Reviewing exam strategy right after startup content.",
+      "started_at": "2026-04-02T09:24:00.000Z",
+      "ended_at": "2026-04-02T09:42:00.000Z",
+      "duration_ms": 1080000,
+      "event_count": 1,
+      "domains": ["examportal.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1004,
+          "occurred_at": "2026-04-02T09:31:00.000Z",
+          "url": "https://examportal.com/strategy/final-week-plan",
+          "domain": "examportal.com",
+          "application": "chrome",
+          "title": "Final Week Exam Strategy",
+          "structured_summary": "Exam strategy video for the final week."
+        }
+      ]
     },
     {
       "id": 5,
+      "key": "coding-debug-session",
+      "label": "Coding debug session",
+      "subject": "coding",
+      "summary": "Debugging after exam planning.",
+      "started_at": "2026-04-02T09:48:00.000Z",
+      "ended_at": "2026-04-02T10:15:00.000Z",
+      "duration_ms": 1620000,
+      "event_count": 1,
+      "domains": ["github.com"],
+      "applications": ["cursor"],
+      "mode": "coding",
+      "events": [
+        {
+          "id": 1005,
+          "occurred_at": "2026-04-02T09:56:00.000Z",
+          "url": "https://github.com/memact/influnet/issues/4",
+          "domain": "github.com",
+          "application": "cursor",
+          "title": "Influnet Debugging Session",
+          "structured_summary": "Debugging Influnet after planning work."
+        }
+      ]
+    },
+    {
+      "id": 6,
       "key": "founder-interview",
       "label": "Founder interview",
       "subject": "startup founder",
       "summary": "Watching a founder interview.",
-      "started_at": "2026-04-03T10:00:00.000Z",
-      "ended_at": "2026-04-03T10:06:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
-    },
-    {
-      "id": 6,
-      "key": "exam-question-bank",
-      "label": "Exam question bank",
-      "subject": "exam practice",
-      "summary": "Solving exam questions.",
-      "started_at": "2026-04-03T10:10:00.000Z",
-      "ended_at": "2026-04-03T10:16:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
+      "started_at": "2026-04-03T09:05:00.000Z",
+      "ended_at": "2026-04-03T09:22:00.000Z",
+      "duration_ms": 1020000,
+      "event_count": 1,
+      "domains": ["ycombinator.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1006,
+          "occurred_at": "2026-04-03T09:12:00.000Z",
+          "url": "https://www.ycombinator.com/library/founder-conviction",
+          "domain": "ycombinator.com",
+          "application": "chrome",
+          "title": "YC Founder Interview: Conviction",
+          "structured_summary": "Founder interview about building conviction."
+        }
+      ]
     },
     {
       "id": 7,
+      "key": "exam-question-bank",
+      "label": "Exam question bank",
+      "subject": "exam practice",
+      "summary": "Solving an exam question bank.",
+      "started_at": "2026-04-03T09:27:00.000Z",
+      "ended_at": "2026-04-03T09:46:00.000Z",
+      "duration_ms": 1140000,
+      "event_count": 1,
+      "domains": ["examportal.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1007,
+          "occurred_at": "2026-04-03T09:34:00.000Z",
+          "url": "https://examportal.com/question-bank/physics",
+          "domain": "examportal.com",
+          "application": "chrome",
+          "title": "Physics Question Bank",
+          "structured_summary": "Solving physics exam questions."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "key": "coding-repo-work",
+      "label": "Coding repo work",
+      "subject": "coding",
+      "summary": "Coding inside a repo after exam work.",
+      "started_at": "2026-04-03T09:52:00.000Z",
+      "ended_at": "2026-04-03T10:20:00.000Z",
+      "duration_ms": 1680000,
+      "event_count": 1,
+      "domains": ["github.com"],
+      "applications": ["cursor"],
+      "mode": "coding",
+      "events": [
+        {
+          "id": 1008,
+          "occurred_at": "2026-04-03T10:02:00.000Z",
+          "url": "https://github.com/memact/captanet/pull/12",
+          "domain": "github.com",
+          "application": "cursor",
+          "title": "Captanet Pull Request Review",
+          "structured_summary": "Working in the Captanet repository."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "key": "startup-podcast",
+      "label": "Startup podcast",
+      "subject": "startup founder",
+      "summary": "Listening to a startup podcast.",
+      "started_at": "2026-04-04T09:10:00.000Z",
+      "ended_at": "2026-04-04T09:30:00.000Z",
+      "duration_ms": 1200000,
+      "event_count": 1,
+      "domains": ["youtube.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1009,
+          "occurred_at": "2026-04-04T09:18:00.000Z",
+          "url": "https://www.youtube.com/watch?v=founder-podcast-focus",
+          "domain": "youtube.com",
+          "application": "chrome",
+          "title": "Founder Podcast: Staying Focused",
+          "structured_summary": "Listening to a founder podcast about focus."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "key": "exam-prep-sprint",
+      "label": "Exam prep sprint",
+      "subject": "exam prep",
+      "summary": "Focused exam preparation sprint.",
+      "started_at": "2026-04-04T09:34:00.000Z",
+      "ended_at": "2026-04-04T09:52:00.000Z",
+      "duration_ms": 1080000,
+      "event_count": 1,
+      "domains": ["docs.google.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1010,
+          "occurred_at": "2026-04-04T09:40:00.000Z",
+          "url": "https://docs.google.com/document/d/exam-plan",
+          "domain": "docs.google.com",
+          "application": "chrome",
+          "title": "Exam Prep Sprint Plan",
+          "structured_summary": "Working through an exam prep plan."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "key": "coding-implementation",
+      "label": "Coding implementation",
+      "subject": "coding",
+      "summary": "Implementing code after exam prep.",
+      "started_at": "2026-04-04T09:58:00.000Z",
+      "ended_at": "2026-04-04T10:28:00.000Z",
+      "duration_ms": 1800000,
+      "event_count": 1,
+      "domains": ["github.com"],
+      "applications": ["cursor"],
+      "mode": "coding",
+      "events": [
+        {
+          "id": 1011,
+          "occurred_at": "2026-04-04T10:10:00.000Z",
+          "url": "https://github.com/memact/influnet/tree/main/src",
+          "domain": "github.com",
+          "application": "cursor",
+          "title": "Influnet Source Implementation",
+          "structured_summary": "Implementing Influnet code."
+        }
+      ]
+    },
+    {
+      "id": 12,
       "key": "startup-founder-video",
       "label": "Startup founder video",
       "subject": "startup founder",
       "summary": "Watching a startup founder video.",
-      "started_at": "2026-04-03T10:28:00.000Z",
-      "ended_at": "2026-04-03T10:35:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
+      "started_at": "2026-04-05T09:00:00.000Z",
+      "ended_at": "2026-04-05T09:18:00.000Z",
+      "duration_ms": 1080000,
+      "event_count": 1,
+      "domains": ["youtube.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1012,
+          "occurred_at": "2026-04-05T09:07:00.000Z",
+          "url": "https://www.youtube.com/watch?v=founder-video-craft",
+          "domain": "youtube.com",
+          "application": "chrome",
+          "title": "Startup Founder Video: Product Craft",
+          "structured_summary": "Watching a startup founder talk about product craft."
+        }
+      ]
     },
     {
-      "id": 8,
-      "key": "exam-prep-sprint",
-      "label": "Exam prep sprint",
-      "subject": "exam prep",
-      "summary": "Focused exam preparation.",
-      "started_at": "2026-04-03T10:39:00.000Z",
-      "ended_at": "2026-04-03T10:47:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
-    },
-    {
-      "id": 9,
-      "key": "startup-school-talk",
-      "label": "Startup School talk",
-      "subject": "startup school",
-      "summary": "Watching a startup school talk.",
-      "started_at": "2026-04-03T11:00:00.000Z",
-      "ended_at": "2026-04-03T11:08:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
-    },
-    {
-      "id": 10,
+      "id": 13,
       "key": "exam-mock-test",
       "label": "Exam mock test",
       "subject": "mock exam",
-      "summary": "Completing a mock exam.",
-      "started_at": "2026-04-03T11:12:00.000Z",
-      "ended_at": "2026-04-03T11:20:00.000Z",
-      "event_count": 2,
-      "mode": "reading"
+      "summary": "Completing a mock test.",
+      "started_at": "2026-04-05T09:23:00.000Z",
+      "ended_at": "2026-04-05T09:44:00.000Z",
+      "duration_ms": 1260000,
+      "event_count": 1,
+      "domains": ["examportal.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1013,
+          "occurred_at": "2026-04-05T09:31:00.000Z",
+          "url": "https://examportal.com/mock-test/final-round",
+          "domain": "examportal.com",
+          "application": "chrome",
+          "title": "Final Round Mock Test",
+          "structured_summary": "Completing a final round mock exam."
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "key": "coding-repo-work",
+      "label": "Coding repo work",
+      "subject": "coding",
+      "summary": "Coding after a mock test.",
+      "started_at": "2026-04-05T09:50:00.000Z",
+      "ended_at": "2026-04-05T10:16:00.000Z",
+      "duration_ms": 1560000,
+      "event_count": 1,
+      "domains": ["github.com"],
+      "applications": ["cursor"],
+      "mode": "coding",
+      "events": [
+        {
+          "id": 1014,
+          "occurred_at": "2026-04-05T10:01:00.000Z",
+          "url": "https://github.com/memact/influnet/pull/7",
+          "domain": "github.com",
+          "application": "cursor",
+          "title": "Influnet Pull Request",
+          "structured_summary": "Working through an Influnet pull request."
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "key": "yc-founder-essay",
+      "label": "YC founder essay",
+      "subject": "startup founder",
+      "summary": "Reading a YC founder essay.",
+      "started_at": "2026-04-06T09:05:00.000Z",
+      "ended_at": "2026-04-06T09:26:00.000Z",
+      "duration_ms": 1260000,
+      "event_count": 1,
+      "domains": ["ycombinator.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1015,
+          "occurred_at": "2026-04-06T09:14:00.000Z",
+          "url": "https://www.ycombinator.com/library/founder-focus-essay",
+          "domain": "ycombinator.com",
+          "application": "chrome",
+          "title": "YC Essay: Founder Focus",
+          "structured_summary": "Reading a YC founder essay about focus."
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "key": "exam-revision-notes",
+      "label": "Exam revision notes",
+      "subject": "exam revision",
+      "summary": "Returning to exam revision notes.",
+      "started_at": "2026-04-06T09:31:00.000Z",
+      "ended_at": "2026-04-06T09:52:00.000Z",
+      "duration_ms": 1260000,
+      "event_count": 1,
+      "domains": ["examportal.com"],
+      "applications": ["chrome"],
+      "mode": "reading",
+      "events": [
+        {
+          "id": 1016,
+          "occurred_at": "2026-04-06T09:39:00.000Z",
+          "url": "https://examportal.com/revision/final-recall-sheet",
+          "domain": "examportal.com",
+          "application": "chrome",
+          "title": "Final Recall Revision Sheet",
+          "structured_summary": "Reviewing a final recall revision sheet."
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "key": "coding-implementation",
+      "label": "Coding implementation",
+      "subject": "coding",
+      "summary": "Implementing after revision.",
+      "started_at": "2026-04-06T09:58:00.000Z",
+      "ended_at": "2026-04-06T10:28:00.000Z",
+      "duration_ms": 1800000,
+      "event_count": 1,
+      "domains": ["github.com"],
+      "applications": ["cursor"],
+      "mode": "coding",
+      "events": [
+        {
+          "id": 1017,
+          "occurred_at": "2026-04-06T10:09:00.000Z",
+          "url": "https://github.com/memact/captanet/tree/main/extension/memact",
+          "domain": "github.com",
+          "application": "cursor",
+          "title": "Captanet Extension Work",
+          "structured_summary": "Coding inside the Captanet extension."
+        }
+      ]
     }
   ]
 }

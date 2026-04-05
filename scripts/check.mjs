@@ -30,11 +30,29 @@ async function main() {
     throw new Error('Sample snapshot did not produce any valid influence chains.')
   }
 
-  const [topChain] = analysis.valid_chains
-  if (topChain.from !== 'startup' || topChain.to !== 'exam') {
+  const startupToExam = analysis.valid_chains.find(
+    (chain) => chain.from === 'startup' && chain.to === 'exam'
+  )
+  if (!startupToExam) {
     throw new Error(
-      `Unexpected top sample chain ${topChain.from} -> ${topChain.to}. Expected startup -> exam.`
+      'Expected sample chain startup -> exam was not found.'
     )
+  }
+
+  if (!Array.isArray(analysis.trajectories) || analysis.trajectories.length === 0) {
+    throw new Error('Sample snapshot did not produce any repeated trajectories.')
+  }
+
+  const startupTrajectory = analysis.trajectories.find(
+    (trajectory) => trajectory.path.join('=>') === 'startup=>exam=>coding'
+  )
+  if (!startupTrajectory) {
+    throw new Error('Expected sample trajectory startup -> exam -> coding was not found.')
+  }
+
+  const startupDrift = analysis.drift_signals.find((signal) => signal.key === 'startup')
+  if (!startupDrift) {
+    throw new Error('Expected startup drift signal was not found.')
   }
 
   console.log('Influnet checks passed.')

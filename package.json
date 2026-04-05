@@ -32,6 +32,7 @@
   "scripts": {
     "check": "node ./scripts/check.mjs",
     "analyze": "node ./src/cli.mjs",
-    "sample": "node ./src/cli.mjs --input examples/sample-captanet-snapshot.json --format all"
+    "sample": "node ./src/cli.mjs --input examples/sample-captanet-snapshot.json --format report",
+    "sample:all": "node ./src/cli.mjs --input examples/sample-captanet-snapshot.json --format all"
   }
 }

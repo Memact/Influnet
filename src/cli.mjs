@@ -5,36 +5,49 @@ import path from "node:path";
 import {
   analyzeInfluenceSnapshot,
   formatDotGraph,
+  formatReadableDriftSignals,
+  formatReadableEvidence,
   formatReadableGraph,
   formatReadableInsights,
+  formatReadableThemes,
+  formatReadableTrajectories,
+  formatTerminalReport,
 } from "./engine.mjs";
 
 function printUsage() {
   console.log(`Influnet CLI
 
 Usage:
-  node src/cli.mjs --input <path-to-captanet-snapshot.json> [--format json|insights|graph|dot|all] [--field key|mode|label] [--window-minutes 45] [--min-count 3] [--min-source-count 5] [--top 3]
+  node src/cli.mjs --input <path-to-captanet-snapshot.json> [--format json|report|insights|graph|dot|themes|trajectories|drift|evidence|all] [--field key|mode|label] [--window-minutes 45] [--min-count 3] [--min-source-count 5] [--top 3]
 
 Options:
   --input           Path to a Captanet snapshot JSON file
-  --format          Output format: json, insights, graph, dot, or all (default: all)
+  --format          Output format: json, report, insights, graph, dot, themes, trajectories, drift, evidence, or all (default: report)
   --field           Activity identity field: key, mode, or label (default: key)
   --window-minutes  Maximum transition gap in minutes (default: 45)
   --min-count       Minimum repeated count for a valid chain (default: 3)
   --min-source-count Minimum source activity support count (default: 5)
   --top             Maximum number of reported chains (default: 3)
+  --top-themes      Maximum number of reported themes (default: 5)
+  --top-trajectories Maximum number of reported trajectories (default: 3)
+  --min-trajectory-count Minimum repeated count for a reported trajectory (default: 2)
+  --top-drift       Maximum number of reported drift signals (default: 3)
   --help            Show this help
 `);
 }
 
 function parseArgs(argv) {
   const options = {
-    format: "all",
+    format: "report",
     field: "key",
     windowMinutes: 45,
     minCount: 3,
     minSourceCount: 5,
     top: 3,
+    topThemes: 5,
+    topTrajectories: 3,
+    minTrajectoryCount: 2,
+    topDrift: 3,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -78,6 +91,26 @@ function parseArgs(argv) {
     if (arg === "--top") {
       options.top = Number(next || 3) || 3;
       index += 1;
+      continue;
+    }
+    if (arg === "--top-themes") {
+      options.topThemes = Number(next || 5) || 5;
+      index += 1;
+      continue;
+    }
+    if (arg === "--top-trajectories") {
+      options.topTrajectories = Number(next || 3) || 3;
+      index += 1;
+      continue;
+    }
+    if (arg === "--min-trajectory-count") {
+      options.minTrajectoryCount = Number(next || 2) || 2;
+      index += 1;
+      continue;
+    }
+    if (arg === "--top-drift") {
+      options.topDrift = Number(next || 3) || 3;
+      index += 1;
     }
   }
 
@@ -101,19 +134,35 @@ async function main() {
     minCount: options.minCount,
     minSourceCount: options.minSourceCount,
     topN: options.top,
+    topThemes: options.topThemes,
+    topTrajectories: options.topTrajectories,
+    minTrajectoryCount: options.minTrajectoryCount,
+    topDrift: options.topDrift,
   });
 
   const format = String(options.format || "all").toLowerCase();
-  if (!["json", "insights", "graph", "dot", "all"].includes(format)) {
+  if (
+    ![
+      "json",
+      "report",
+      "insights",
+      "graph",
+      "dot",
+      "themes",
+      "trajectories",
+      "drift",
+      "evidence",
+      "all",
+    ].includes(format)
+  ) {
     throw new Error(`Unsupported format "${options.format}"`);
   }
 
   if (format === "all") {
-    console.log("Valid chains (JSON)");
-    console.log(JSON.stringify(analysis.valid_chains, null, 2));
+    console.log(formatTerminalReport(analysis));
     console.log("");
-    console.log("Insights");
-    console.log(formatReadableInsights(analysis.insights) || "No valid influence chains found.");
+    console.log("Evidence");
+    console.log(formatReadableEvidence(analysis.valid_chains) || "No evidence-backed chains found.");
     console.log("");
     console.log("Graph");
     console.log(formatReadableGraph(analysis.valid_chains) || "No valid influence chains found.");
@@ -124,7 +173,12 @@ async function main() {
   }
 
   if (format === "json") {
-    console.log(JSON.stringify(analysis.valid_chains, null, 2));
+    console.log(JSON.stringify(analysis, null, 2));
+    return;
+  }
+
+  if (format === "report") {
+    console.log(formatTerminalReport(analysis));
     return;
   }
 
@@ -135,6 +189,26 @@ async function main() {
 
   if (format === "graph") {
     console.log(formatReadableGraph(analysis.valid_chains) || "No valid influence chains found.");
+    return;
+  }
+
+  if (format === "themes") {
+    console.log(formatReadableThemes(analysis.themes) || "No persistent themes found.");
+    return;
+  }
+
+  if (format === "trajectories") {
+    console.log(formatReadableTrajectories(analysis.trajectories) || "No repeated trajectories found.");
+    return;
+  }
+
+  if (format === "drift") {
+    console.log(formatReadableDriftSignals(analysis.drift_signals) || "No drift signals found.");
+    return;
+  }
+
+  if (format === "evidence") {
+    console.log(formatReadableEvidence(analysis.valid_chains) || "No evidence-backed chains found.");
     return;
   }
 
