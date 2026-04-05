@@ -126,13 +126,15 @@ Generate pitch-ready artifacts from a snapshot:
 npm run pitch
 ```
 
+If you omit `--input`, Influnet now automatically uses the newest `captanet-snapshot-*.json` file it finds in the workspace root above this repository.
+
 Analyze any Captanet snapshot:
 
 ```powershell
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format report
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --format report
 ```
 
-If `captanet-snapshot.json` already sits in the workspace root above this repo, `--input` becomes optional:
+If you already exported a Captanet snapshot into the workspace root above this repo, `--input` becomes optional and Influnet will pick the newest matching export automatically:
 
 ```powershell
 npm run analyze -- --format report
@@ -141,28 +143,28 @@ npm run analyze -- --format report
 Use mode-level analysis instead of activity keys:
 
 ```powershell
-npm run analyze -- --input <path-to-captanet-snapshot.json> --field mode --format insights
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --field mode --format insights
 ```
 
 Control support thresholds:
 
 ```powershell
-npm run analyze -- --input <path-to-captanet-snapshot.json> --min-count 3 --min-source-count 5 --top 3
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --min-count 3 --min-source-count 5 --top 3
 ```
 
 Inspect only the source evidence behind strong chains:
 
 ```powershell
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format evidence
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --format evidence
 ```
 
 Inspect themes, trajectories, or drift signals directly:
 
 ```powershell
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format themes
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format trajectories
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format drift
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format formation
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --format themes
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --format trajectories
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --format drift
+npm run analyze -- --input <path-to-captanet-snapshot-*.json> --format formation
 ```
 
 Direct CLI invocation also works:
@@ -184,10 +186,10 @@ await window.captanet.exportSnapshot({
 By default that file is saved to:
 
 ```text
-C:\Users\sujay\Downloads\memact_ai\captanet-snapshot.json
+C:\Users\sujay\Downloads\memact_ai\captanet-snapshot-<timestamp>-<id>.json
 ```
 
-2. Analyze that snapshot in the terminal:
+2. Analyze the newest exported snapshot in the terminal:
 
 ```powershell
 npm run analyze -- --format report

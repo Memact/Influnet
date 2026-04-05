@@ -16,11 +16,14 @@ import {
   formatTerminalReport,
 } from "./engine.mjs";
 
+const DEFAULT_SNAPSHOT_BASENAME = "captanet-snapshot.json";
+const SNAPSHOT_FILENAME_PATTERN = /^captanet-snapshot(?:-[^.]+)?\.json$/i;
+
 function printUsage() {
   console.log(`Influnet CLI
 
 Usage:
-  node src/cli.mjs --input <path-to-captanet-snapshot.json> [--format json|report|insights|graph|dot|themes|trajectories|drift|formation|pitch|evidence|all] [--field key|mode|label] [--window-minutes 45] [--min-count 3] [--min-source-count 5] [--top 3]
+  node src/cli.mjs --input <path-to-captanet-snapshot-*.json> [--format json|report|insights|graph|dot|themes|trajectories|drift|formation|pitch|evidence|all] [--field key|mode|label] [--window-minutes 45] [--min-count 3] [--min-source-count 5] [--top 3]
 
 Options:
   --input           Path to a Captanet snapshot JSON file
@@ -127,23 +130,56 @@ function parseArgs(argv) {
 }
 
 async function resolveInputPath(inputOption) {
-  const candidates = inputOption
-    ? [path.resolve(process.cwd(), inputOption)]
-    : [
-        path.resolve(process.cwd(), "../captanet-snapshot.json"),
-        path.resolve(process.cwd(), "captanet-snapshot.json"),
-      ];
-
-  for (const candidate of candidates) {
+  if (inputOption) {
+    const candidate = path.resolve(process.cwd(), inputOption);
     try {
       await fs.access(candidate);
       return candidate;
     } catch {
-      // Try the next candidate.
+      return null;
+    }
+  }
+
+  const candidateDirectories = [
+    path.resolve(process.cwd(), ".."),
+    path.resolve(process.cwd()),
+  ];
+
+  for (const directory of candidateDirectories) {
+    const candidates = await findSnapshotFiles(directory);
+    if (candidates.length > 0) {
+      return candidates[0];
     }
   }
 
   return null;
+}
+
+async function findSnapshotFiles(directory) {
+  try {
+    const entries = await fs.readdir(directory, { withFileTypes: true });
+    const snapshotEntries = entries
+      .filter(
+        (entry) =>
+          entry.isFile() &&
+          (entry.name === DEFAULT_SNAPSHOT_BASENAME ||
+            SNAPSHOT_FILENAME_PATTERN.test(entry.name))
+      )
+      .map((entry) => path.join(directory, entry.name));
+
+    const withStats = await Promise.all(
+      snapshotEntries.map(async (filePath) => ({
+        filePath,
+        stat: await fs.stat(filePath),
+      }))
+    );
+
+    return withStats
+      .sort((left, right) => right.stat.mtimeMs - left.stat.mtimeMs)
+      .map((item) => item.filePath);
+  } catch {
+    return [];
+  }
 }
 
 async function main() {
@@ -157,7 +193,7 @@ async function main() {
   if (!inputPath) {
     printUsage();
     throw new Error(
-      'No Captanet snapshot was found. Pass --input <path> or place "captanet-snapshot.json" in the workspace root.'
+      "No Captanet snapshot was found. Pass --input <path> or place an exported captanet-snapshot-*.json file in the workspace root."
     );
   }
   const inputText = await fs.readFile(inputPath, "utf8");
