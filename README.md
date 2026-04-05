@@ -20,6 +20,7 @@ Given ordered Captanet activities or sessions, Influnet detects directional tran
 - attributes recurring source domains and source pages to each chain
 - detects repeated trajectories such as `A -> B -> C`
 - highlights persistent themes and drift signals over time
+- surfaces deterministic formation signals for themes that start to stabilize or repeatedly redirect attention
 - emits JSON, terminal reports, readable graph lines, DOT graphs, and neutral deterministic insights
 
 ## Why It Exists
@@ -119,10 +120,22 @@ Run the full sample dump including evidence, graph, and DOT:
 npm run sample:all
 ```
 
+Generate pitch-ready artifacts from a snapshot:
+
+```powershell
+npm run pitch
+```
+
 Analyze any Captanet snapshot:
 
 ```powershell
 npm run analyze -- --input <path-to-captanet-snapshot.json> --format report
+```
+
+If `captanet-snapshot.json` already sits in the workspace root above this repo, `--input` becomes optional:
+
+```powershell
+npm run analyze -- --format report
 ```
 
 Use mode-level analysis instead of activity keys:
@@ -149,6 +162,7 @@ Inspect themes, trajectories, or drift signals directly:
 npm run analyze -- --input <path-to-captanet-snapshot.json> --format themes
 npm run analyze -- --input <path-to-captanet-snapshot.json> --format trajectories
 npm run analyze -- --input <path-to-captanet-snapshot.json> --format drift
+npm run analyze -- --input <path-to-captanet-snapshot.json> --format formation
 ```
 
 Direct CLI invocation also works:
@@ -159,25 +173,46 @@ node src/cli.mjs --input examples/sample-captanet-snapshot.json --format all
 
 ## Captanet To Terminal Flow
 
-1. Export a Captanet snapshot from a bridge-enabled Memact host:
+1. Export a Captanet snapshot from a bridge-enabled host:
 
 ```js
 await window.captanet.exportSnapshot({
   limit: 3000,
-  filename: "captanet-snapshot.json",
 });
+```
+
+By default that file is saved to:
+
+```text
+C:\Users\sujay\Downloads\memact_ai\captanet-snapshot.json
 ```
 
 2. Analyze that snapshot in the terminal:
 
 ```powershell
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format report
+npm run analyze -- --format report
 ```
 
-3. If you want the raw graph edges instead of the narrative report:
+3. If you want pitch artifacts written to disk:
 
 ```powershell
-npm run analyze -- --input <path-to-captanet-snapshot.json> --format graph
+npm run pitch
+```
+
+That creates:
+
+- `..\pitch-output\influnet-analysis.json`
+- `..\pitch-output\influnet-report.txt`
+- `..\pitch-output\influnet-insights.txt`
+- `..\pitch-output\influnet-evidence.txt`
+- `..\pitch-output\influnet-graph.txt`
+- `..\pitch-output\influnet-graph.dot`
+- `..\pitch-output\influnet-pitch.md`
+
+4. If you want the raw graph edges instead of the narrative report:
+
+```powershell
+npm run analyze -- --format graph
 ```
 
 ## Programmatic Use
@@ -217,6 +252,9 @@ Repeated Trajectories
 
 Drift Signals
 - startup-related content became more persistent later in the timeline.
+
+Formation Signals
+- startup-related content became more persistent later in the timeline and repeatedly preceded shifts toward exam-related content.
 ```
 
 DOT:

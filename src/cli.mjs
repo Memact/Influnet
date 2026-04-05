@@ -7,8 +7,10 @@ import {
   formatDotGraph,
   formatReadableDriftSignals,
   formatReadableEvidence,
+  formatReadableFormationSignals,
   formatReadableGraph,
   formatReadableInsights,
+  formatMarkdownPitchReport,
   formatReadableThemes,
   formatReadableTrajectories,
   formatTerminalReport,
@@ -18,11 +20,11 @@ function printUsage() {
   console.log(`Influnet CLI
 
 Usage:
-  node src/cli.mjs --input <path-to-captanet-snapshot.json> [--format json|report|insights|graph|dot|themes|trajectories|drift|evidence|all] [--field key|mode|label] [--window-minutes 45] [--min-count 3] [--min-source-count 5] [--top 3]
+  node src/cli.mjs --input <path-to-captanet-snapshot.json> [--format json|report|insights|graph|dot|themes|trajectories|drift|formation|pitch|evidence|all] [--field key|mode|label] [--window-minutes 45] [--min-count 3] [--min-source-count 5] [--top 3]
 
 Options:
   --input           Path to a Captanet snapshot JSON file
-  --format          Output format: json, report, insights, graph, dot, themes, trajectories, drift, evidence, or all (default: report)
+  --format          Output format: json, report, insights, graph, dot, themes, trajectories, drift, formation, pitch, evidence, or all (default: report)
   --field           Activity identity field: key, mode, or label (default: key)
   --window-minutes  Maximum transition gap in minutes (default: 45)
   --min-count       Minimum repeated count for a valid chain (default: 3)
@@ -32,6 +34,7 @@ Options:
   --top-trajectories Maximum number of reported trajectories (default: 3)
   --min-trajectory-count Minimum repeated count for a reported trajectory (default: 2)
   --top-drift       Maximum number of reported drift signals (default: 3)
+  --top-formations  Maximum number of reported formation signals (default: 3)
   --help            Show this help
 `);
 }
@@ -48,6 +51,7 @@ function parseArgs(argv) {
     topTrajectories: 3,
     minTrajectoryCount: 2,
     topDrift: 3,
+    topFormations: 3,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -111,21 +115,51 @@ function parseArgs(argv) {
     if (arg === "--top-drift") {
       options.topDrift = Number(next || 3) || 3;
       index += 1;
+      continue;
+    }
+    if (arg === "--top-formations") {
+      options.topFormations = Number(next || 3) || 3;
+      index += 1;
     }
   }
 
   return options;
 }
 
+async function resolveInputPath(inputOption) {
+  const candidates = inputOption
+    ? [path.resolve(process.cwd(), inputOption)]
+    : [
+        path.resolve(process.cwd(), "../captanet-snapshot.json"),
+        path.resolve(process.cwd(), "captanet-snapshot.json"),
+      ];
+
+  for (const candidate of candidates) {
+    try {
+      await fs.access(candidate);
+      return candidate;
+    } catch {
+      // Try the next candidate.
+    }
+  }
+
+  return null;
+}
+
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  if (options.help || !options.input) {
+  if (options.help) {
     printUsage();
-    process.exitCode = options.help ? 0 : 1;
     return;
   }
 
-  const inputPath = path.resolve(process.cwd(), options.input);
+  const inputPath = await resolveInputPath(options.input);
+  if (!inputPath) {
+    printUsage();
+    throw new Error(
+      'No Captanet snapshot was found. Pass --input <path> or place "captanet-snapshot.json" in the workspace root.'
+    );
+  }
   const inputText = await fs.readFile(inputPath, "utf8");
   const snapshot = JSON.parse(inputText.replace(/^\uFEFF/, ""));
   const analysis = analyzeInfluenceSnapshot(snapshot, {
@@ -138,6 +172,7 @@ async function main() {
     topTrajectories: options.topTrajectories,
     minTrajectoryCount: options.minTrajectoryCount,
     topDrift: options.topDrift,
+    topFormations: options.topFormations,
   });
 
   const format = String(options.format || "all").toLowerCase();
@@ -151,6 +186,8 @@ async function main() {
       "themes",
       "trajectories",
       "drift",
+      "formation",
+      "pitch",
       "evidence",
       "all",
     ].includes(format)
@@ -204,6 +241,18 @@ async function main() {
 
   if (format === "drift") {
     console.log(formatReadableDriftSignals(analysis.drift_signals) || "No drift signals found.");
+    return;
+  }
+
+  if (format === "formation") {
+    console.log(
+      formatReadableFormationSignals(analysis.formation_signals) || "No formation signals found."
+    );
+    return;
+  }
+
+  if (format === "pitch") {
+    console.log(formatMarkdownPitchReport(analysis));
     return;
   }
 

@@ -17,6 +17,7 @@ function runSyntaxCheck(relativePath) {
 async function main() {
   runSyntaxCheck('src/engine.mjs')
   runSyntaxCheck('src/cli.mjs')
+  runSyntaxCheck('scripts/pitch-report.mjs')
 
   const snapshot = JSON.parse(
     await readFile(
@@ -53,6 +54,11 @@ async function main() {
   const startupDrift = analysis.drift_signals.find((signal) => signal.key === 'startup')
   if (!startupDrift) {
     throw new Error('Expected startup drift signal was not found.')
+  }
+
+  const startupFormation = analysis.formation_signals.find((signal) => signal.key === 'startup')
+  if (!startupFormation) {
+    throw new Error('Expected startup formation signal was not found.')
   }
 
   console.log('Influnet checks passed.')

@@ -6,6 +6,7 @@ const DEFAULT_MIN_TRAJECTORY_COUNT = 2;
 const DEFAULT_TOP_THEME_COUNT = 5;
 const DEFAULT_TOP_TRAJECTORY_COUNT = 3;
 const DEFAULT_TOP_DRIFT_COUNT = 3;
+const DEFAULT_TOP_FORMATION_COUNT = 3;
 const DIRECTIONAL_COUNT_MARGIN = 2;
 const DIRECTIONAL_COUNT_RATIO = 1.5;
 const DRIFT_MIN_ACTIVE_DAYS = 2;
@@ -808,6 +809,123 @@ function buildDriftSignals(
     .slice(0, topN);
 }
 
+function buildFormationSignals(
+  themes,
+  driftSignals,
+  validChains,
+  trajectories,
+  topN = DEFAULT_TOP_FORMATION_COUNT
+) {
+  const driftByKey = new Map(
+    (Array.isArray(driftSignals) ? driftSignals : []).map((signal) => [signal.key, signal])
+  );
+  const chainGroups = new Map();
+  const trajectoryGroups = new Map();
+
+  for (const chain of Array.isArray(validChains) ? validChains : []) {
+    const fromChains = chainGroups.get(chain.from) || [];
+    fromChains.push(chain);
+    chainGroups.set(chain.from, fromChains);
+
+    const toChains = chainGroups.get(chain.to) || [];
+    toChains.push(chain);
+    chainGroups.set(chain.to, toChains);
+  }
+
+  for (const trajectory of Array.isArray(trajectories) ? trajectories : []) {
+    for (const key of Array.isArray(trajectory.path) ? trajectory.path : []) {
+      const items = trajectoryGroups.get(key) || [];
+      items.push(trajectory);
+      trajectoryGroups.set(key, items);
+    }
+  }
+
+  return (Array.isArray(themes) ? themes : [])
+    .map((theme) => {
+      const drift = driftByKey.get(theme.key) || null;
+      const relatedChains = chainGroups.get(theme.key) || [];
+      const relatedTrajectories = trajectoryGroups.get(theme.key) || [];
+      const strongestOutgoingChain =
+        relatedChains
+          .filter((chain) => chain.from === theme.key)
+          .sort((left, right) => right.confidence - left.confidence || right.count - left.count)[0] ||
+        null;
+      const strongestIncomingChain =
+        relatedChains
+          .filter((chain) => chain.to === theme.key)
+          .sort((left, right) => right.confidence - left.confidence || right.count - left.count)[0] ||
+        null;
+      const strongestTrajectory =
+        [...relatedTrajectories].sort(
+          (left, right) => right.confidence - left.confidence || right.count - left.count
+        )[0] || null;
+
+      let kind = "recurring_theme";
+      let summary = `${theme.human_label} appeared repeatedly across ${theme.active_days} days.`;
+
+      if (drift && strongestOutgoingChain) {
+        kind = "growing_directional_pattern";
+        summary = `${theme.human_label} became more persistent later in the timeline and repeatedly preceded shifts toward ${(
+          strongestOutgoingChain.to_human_label || strongestOutgoingChain.to_label || strongestOutgoingChain.to
+        ).toLowerCase()}.`;
+      } else if (drift) {
+        kind = "growing_theme";
+        summary = `${theme.human_label} moved from lighter activity into a more recurring attention pattern later in the timeline.`;
+      } else if (strongestOutgoingChain && strongestIncomingChain) {
+        kind = "bridge_theme";
+        summary = `${theme.human_label} sat between other recurring themes and showed up in repeated directional transitions.`;
+      } else if (strongestOutgoingChain) {
+        kind = "launch_theme";
+        summary = `${theme.human_label} repeatedly acted as a starting point before activity shifted elsewhere.`;
+      } else if (strongestIncomingChain) {
+        kind = "destination_theme";
+        summary = `${theme.human_label} repeatedly appeared as a destination after earlier activity.`;
+      } else if (strongestTrajectory) {
+        kind = "trajectory_theme";
+        summary = `${theme.human_label} kept reappearing inside longer multi-step trajectories.`;
+      }
+
+      const confidence = round(
+        (drift?.confidence || 0) +
+          (strongestOutgoingChain?.confidence || 0) * 0.7 +
+          (strongestIncomingChain?.confidence || 0) * 0.35 +
+          (strongestTrajectory?.confidence || 0) * 0.5 +
+          Math.max(theme.persistence_score || 0, 0) * 0.1
+      );
+
+      return {
+        key: theme.key,
+        label: theme.label,
+        human_label: theme.human_label,
+        kind,
+        count: theme.count,
+        active_days: theme.active_days,
+        share: theme.share,
+        persistence_score: theme.persistence_score,
+        confidence,
+        drift_signal: drift,
+        strongest_outgoing_chain: strongestOutgoingChain,
+        strongest_incoming_chain: strongestIncomingChain,
+        strongest_trajectory: strongestTrajectory,
+        source_domains: theme.source_domains,
+        source_titles: theme.source_titles,
+        summary,
+      };
+    })
+    .filter(
+      (signal) =>
+        signal.count >= DEFAULT_MIN_COUNT &&
+        (signal.drift_signal || signal.strongest_outgoing_chain || signal.strongest_trajectory)
+    )
+    .sort(
+      (left, right) =>
+        right.confidence - left.confidence ||
+        right.active_days - left.active_days ||
+        right.count - left.count
+    )
+    .slice(0, topN);
+}
+
 function buildTrajectories(
   activities,
   chainsByPairKey,
@@ -960,6 +1078,7 @@ export function analyzeInfluenceSnapshot(snapshot, options = {}) {
     Number(options.minTrajectoryCount || DEFAULT_MIN_TRAJECTORY_COUNT)
   );
   const topDrift = Math.max(1, Number(options.topDrift || DEFAULT_TOP_DRIFT_COUNT));
+  const topFormations = Math.max(1, Number(options.topFormations || DEFAULT_TOP_FORMATION_COUNT));
   const activityField = normalizeText(options.activityField || "key", 40).toLowerCase() || "key";
   const normalizationRules = Array.isArray(options.normalizationRules)
     ? [...DEFAULT_ACTIVITY_NORMALIZATION_RULES, ...options.normalizationRules]
@@ -1148,6 +1267,13 @@ export function analyzeInfluenceSnapshot(snapshot, options = {}) {
     topN: topDrift,
     minCount,
   });
+  const formationSignals = buildFormationSignals(
+    themes,
+    driftSignals,
+    validChains,
+    trajectories,
+    topFormations
+  );
 
   return {
     meta: {
@@ -1162,6 +1288,7 @@ export function analyzeInfluenceSnapshot(snapshot, options = {}) {
       top_themes: topThemes,
       top_trajectories: topTrajectories,
       top_drift: topDrift,
+      top_formations: topFormations,
       activity_field: activityField,
       normalization_rule_count: normalizationRules.length,
       timeline,
@@ -1172,6 +1299,7 @@ export function analyzeInfluenceSnapshot(snapshot, options = {}) {
     themes,
     trajectories,
     drift_signals: driftSignals,
+    formation_signals: formationSignals,
   };
 }
 
@@ -1221,6 +1349,16 @@ export function formatReadableDriftSignals(signals) {
     .join("\n");
 }
 
+export function formatReadableFormationSignals(signals) {
+  return (Array.isArray(signals) ? signals : [])
+    .map((signal) => {
+      const sources = formatCountList(signal.source_domains || []);
+      const sourceSuffix = sources ? ` | sources: ${sources}` : "";
+      return `${signal.key}: ${signal.summary} confidence=${signal.confidence}${sourceSuffix}`;
+    })
+    .join("\n");
+}
+
 export function formatReadableEvidence(chains) {
   return (Array.isArray(chains) ? chains : [])
     .map((chain, index) => {
@@ -1255,6 +1393,68 @@ export function formatDotGraph(chains) {
     .join("\n");
 
   return `digraph Influnet {\n${edges}\n}`;
+}
+
+export function formatMarkdownPitchReport(analysis) {
+  const lines = [];
+  const meta = analysis?.meta || {};
+  const timeline = meta.timeline || {};
+
+  lines.push("# Influnet Pitch Report");
+  lines.push("");
+  lines.push(
+    `Generated from a Captanet snapshot with ${meta.activity_count || 0} normalized activities across ${timeline.days_spanned || 0} active days.`
+  );
+  lines.push("");
+
+  lines.push("## Strongest Directional Patterns");
+  if (analysis?.valid_chains?.length) {
+    for (const chain of analysis.valid_chains) {
+      lines.push(
+        `- **${chain.from_label} -> ${chain.to_label}**: ${buildInsightSummary(chain)}`
+      );
+    }
+  } else {
+    lines.push("- No strong directional patterns met the current support rules.");
+  }
+  lines.push("");
+
+  lines.push("## Formation Signals");
+  if (analysis?.formation_signals?.length) {
+    for (const signal of analysis.formation_signals) {
+      lines.push(`- **${signal.label}**: ${signal.summary}`);
+    }
+  } else {
+    lines.push("- No formation signals met the current support rules.");
+  }
+  lines.push("");
+
+  lines.push("## Repeated Trajectories");
+  if (analysis?.trajectories?.length) {
+    for (const trajectory of analysis.trajectories) {
+      lines.push(
+        `- **${trajectory.path.join(" -> ")}**: ${trajectory.summary}`
+      );
+    }
+  } else {
+    lines.push("- No repeated multi-step trajectories were found.");
+  }
+  lines.push("");
+
+  lines.push("## Source Evidence");
+  if (analysis?.valid_chains?.length) {
+    for (const chain of analysis.valid_chains) {
+      const sourceDomains = formatCountList(chain.evidence?.source_domains || []);
+      const destinationDomains = formatCountList(chain.evidence?.destination_domains || []);
+      lines.push(
+        `- **${chain.from_label} -> ${chain.to_label}**: before=${sourceDomains || "unknown"} | after=${destinationDomains || "unknown"}`
+      );
+    }
+  } else {
+    lines.push("- No evidence-backed chain set available.");
+  }
+
+  return lines.join("\n");
 }
 
 export function formatTerminalReport(analysis) {
@@ -1337,6 +1537,19 @@ export function formatTerminalReport(analysis) {
     }
   } else {
     lines.push("No drift signals found.");
+  }
+
+  lines.push("");
+  lines.push("Formation Signals");
+  if (analysis?.formation_signals?.length) {
+    for (const signal of analysis.formation_signals) {
+      lines.push(`- ${signal.summary}`);
+      if (signal.source_domains?.length) {
+        lines.push(`  recurring sources: ${formatCountList(signal.source_domains)}`);
+      }
+    }
+  } else {
+    lines.push("No formation signals found.");
   }
 
   return lines.join("\n");

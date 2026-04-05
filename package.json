@@ -33,6 +33,7 @@
     "check": "node ./scripts/check.mjs",
     "analyze": "node ./src/cli.mjs",
     "sample": "node ./src/cli.mjs --input examples/sample-captanet-snapshot.json --format report",
-    "sample:all": "node ./src/cli.mjs --input examples/sample-captanet-snapshot.json --format all"
+    "sample:all": "node ./src/cli.mjs --input examples/sample-captanet-snapshot.json --format all",
+    "pitch": "node ./scripts/pitch-report.mjs"
   }
 }
